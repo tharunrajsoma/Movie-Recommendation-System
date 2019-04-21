@@ -4,7 +4,10 @@ import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import CountVectorizer
 
+# Select maximum number columns to display
 pd.set_option('display.max_columns', 120)
+
+# Top 250 movies database from IMDB
 df = pd.read_csv('data/IMDB_Top250Engmovies2_OMDB_Detailed.csv')
 
 # Select those features on which your recommendation should base on
@@ -77,7 +80,9 @@ cosine_sim = cosine_similarity(count_matrix, count_matrix)
 # Function that takes in movie title as input and can
 # return top 10 movies similar to this based on content 
 # using NLP and Cosine Similarity techniques
-def movie_recommendations(title, cosine_sim = cosine_sim):
+def recommendations(title, cosine_sim = cosine_sim):
+    
+    recommended_movies = []
     
     # gettin the index of the movie that matches the title
     idx = indices[indices == title].index[0]
@@ -88,11 +93,25 @@ def movie_recommendations(title, cosine_sim = cosine_sim):
     # getting the indexes of the 10 most similar movies
     top_10_indexes = list(score_series.iloc[1:11].index)
     
-    # Printing the list of top 10 recommended movies
+    # populating the list with the titles of the best 10 matching movies
+    for i in top_10_indexes:
+        recommended_movies.append(list(df.index)[i])
+        
+    return recommended_movies
+
+ # Printing the list of top 10 recommended movies
+def print_recommendations(recommended_movies):
     serial_no = 1
     print('\nList of recommended movies:')
-    for i in top_10_indexes:
-        print(serial_no,'.',list(df.index)[i])
+    for movie in recommended_movies:
+        print(serial_no,'.',movie)
         serial_no+=1  
 
-movie_recommendations('Interstellar')
+recommended_movies = []
+recommended_movies = recommendations('Interstellar')
+
+# Printing recommended movies generated using our algorithm
+if recommended_movies == []:
+    print('No recommended movies found')
+else:
+    print_recommendations(recommended_movies)
