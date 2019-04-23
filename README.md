@@ -1,5 +1,5 @@
 # Movie-Recommendation-System
-Content based movie recommendations using NLP
+Content based movie recommendation system with NLP
 
 ## Before you start
 
